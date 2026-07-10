@@ -1,0 +1,40 @@
+<div class="page-header">
+    <h1>Ресторани</h1>
+    <p>Знайдіть ідеальне місце для відпочинку</p>
+</div>
+
+<div class="restaurants-grid">
+    {% for restaurant in restaurants %}
+    <div class="r-card">
+        <div class="r-card__img-wrap">
+            <img src="{{ restaurant.main_image }}" alt="{{ restaurant.name }}" class="r-card__img">
+        </div>
+        <div class="r-card__body">
+            <h2 class="r-card__title">{{ restaurant.name }}</h2>
+            <p class="r-card__desc">{{ restaurant.description }}</p>
+
+            <div class="r-card__menu">
+                <div class="r-card__menu-title">Меню</div>
+                <ul>
+                    {% set items = restaurant.menu.split(';') %}
+                    {% for item in items[:4] %}
+                        <li>{{ item.strip() }}</li>
+                    {% endfor %}
+                    {% if items|length > 4 %}
+                        <li style="color:#b8900a; font-weight:600;">+ ще {{ items|length - 4 }} страви...</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="r-card__footer">
+            <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}" class="btn-detail">
+                Дізнатися більше →
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state" style="grid-column: 1/-1;">
+        <p>😔 Ресторани не знайдено</p>
+    </div>
+    {% endfor %}
+</div>

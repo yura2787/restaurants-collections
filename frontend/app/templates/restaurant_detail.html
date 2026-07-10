@@ -1,0 +1,70 @@
+{% extends "components/base.html" %}
+
+{% block content %}
+<div class="detail-container">
+
+    <h1 class="detail-title">{{ restaurant.name }}</h1>
+
+    {% if restaurant.images %}
+    <div class="detail-carousel">
+        <div id="carouselRestaurant" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for image in restaurant.images %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img src="{{ image }}" class="carousel-img d-block w-100" alt="Фото ресторану">
+                </div>
+                {% endfor %}
+            </div>
+            {% if restaurant.images|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselRestaurant" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselRestaurant" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="detail-card">
+        <h3>Про ресторан</h3>
+        <p>{{ restaurant.detailed_description or restaurant.description }}</p>
+    </div>
+
+    <div class="detail-card menu-card">
+        <h3>Меню</h3>
+        <ul>
+            {% for item in restaurant.menu.split(';') %}
+                {% if item.strip() %}
+                <li>{{ item.strip() }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="detail-card reviews-card">
+        <h3>Відгуки</h3>
+        {% set comments = (restaurant.comments or '').split(';') %}
+        {% set has_comments = namespace(value=false) %}
+        {% for item in comments %}
+            {% if item.strip() %}
+                {% set has_comments.value = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if has_comments.value %}
+            {% for item in comments %}
+                {% if item.strip() %}
+                <div class="review-item">{{ item.strip() }}</div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p class="no-reviews">Відгуків поки немає</p>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('index') }}" class="btn-back">← Повернутися на головну</a>
+
+</div>
+{% endblock %}
