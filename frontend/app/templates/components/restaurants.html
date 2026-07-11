@@ -3,11 +3,40 @@
     <p>Знайдіть ідеальне місце для відпочинку</p>
 </div>
 
+<div class="filter-bar">
+    <div class="cuisine-chips">
+        <a href="{{ url_for('index') }}?sort={{ active_sort }}&direction={{ active_direction }}"
+           class="chip {% if not active_cuisine %}chip--active{% endif %}">Усі</a>
+        {% for c in cuisines %}
+        <a href="{{ url_for('index') }}?cuisine={{ c }}&sort={{ active_sort }}&direction={{ active_direction }}"
+           class="chip {% if active_cuisine == c %}chip--active{% endif %}">{{ c }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="sort-box">
+        <label>Сортувати:</label>
+        <select id="sort-select" data-cuisine="{{ active_cuisine }}">
+            <option value="id|desc" {% if active_sort=='id' and active_direction=='desc' %}selected{% endif %}>Спочатку нові</option>
+            <option value="id|asc" {% if active_sort=='id' and active_direction=='asc' %}selected{% endif %}>Спочатку старі</option>
+            <option value="name|asc" {% if active_sort=='name' and active_direction=='asc' %}selected{% endif %}>Назва А–Я</option>
+            <option value="name|desc" {% if active_sort=='name' and active_direction=='desc' %}selected{% endif %}>Назва Я–А</option>
+        </select>
+    </div>
+</div>
+
 <div class="restaurants-grid">
     {% for restaurant in restaurants %}
     <div class="r-card">
         <div class="r-card__img-wrap">
             <img src="{{ restaurant.main_image }}" alt="{{ restaurant.name }}" class="r-card__img">
+            {% if restaurant.cuisine %}<span class="r-card__cuisine">{{ restaurant.cuisine }}</span>{% endif %}
+            {% if restaurant.price_range %}<span class="r-card__price">{{ restaurant.price_range }}</span>{% endif %}
+            {% if user %}
+            <button class="fav-btn {% if restaurant.is_favorite %}fav-btn--active{% endif %}"
+                    data-id="{{ restaurant.id }}" aria-label="В обране">
+                {% if restaurant.is_favorite %}♥{% else %}♡{% endif %}
+            </button>
+            {% endif %}
         </div>
         <div class="r-card__body">
             <h2 class="r-card__title">{{ restaurant.name }}</h2>
@@ -38,3 +67,18 @@
     </div>
     {% endfor %}
 </div>
+
+{% if total_pages and total_pages > 1 %}
+<div class="pagination-bar">
+    {% set base = url_for('index') ~ '?cuisine=' ~ active_cuisine ~ '&sort=' ~ active_sort ~ '&direction=' ~ active_direction %}
+    {% if current_page > 1 %}
+    <a href="{{ base }}&page={{ current_page - 1 }}" class="page-btn">←</a>
+    {% endif %}
+    {% for p in range(1, total_pages + 1) %}
+    <a href="{{ base }}&page={{ p }}" class="page-btn {% if p == current_page %}page-btn--active{% endif %}">{{ p }}</a>
+    {% endfor %}
+    {% if current_page < total_pages %}
+    <a href="{{ base }}&page={{ current_page + 1 }}" class="page-btn">→</a>
+    {% endif %}
+</div>
+{% endif %}

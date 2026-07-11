@@ -24,7 +24,7 @@ class RabbitMQBroker:
     def send_message(self, message: dict, queue_name: str):
         with self.get_connection() as connection:
             with connection.channel() as channel:
-                channel.queue_declare(queue=queue_name)
+                channel.queue_declare(queue=queue_name, durable=True)
 
                 message_json_str = json.dumps(message)
 
@@ -41,10 +41,8 @@ class RabbitMQBroker:
     def consume_message(self, channel: pika.adapters.blocking_connection.BlockingChannel):
         queues = SupportedQueues.get_queues()
         self.setup_queues(channel, queues)
-        print(5555555555)
 
         for queue in queues:
-            print(queue, 32323233232)
             channel.basic_consume(
                 queue=queue,
                 on_message_callback=SupportedQueues.get_handler(queue),

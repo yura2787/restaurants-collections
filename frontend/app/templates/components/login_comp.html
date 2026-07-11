@@ -1,6 +1,6 @@
 {% if user %}
 <div class="d-flex align-items-center gap-2">
-  <span class="user-pill">👤 {{ user.name }}</span>
+  <a href="{{ url_for('profile') }}" class="user-pill" style="text-decoration:none;">👤 {{ user.name }}</a>
   <a href="{{ url_for('logout') }}" class="btn-logout">Вийти</a>
 </div>
 {% else %}

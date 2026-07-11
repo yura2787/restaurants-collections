@@ -3,7 +3,8 @@ import uuid
 from fastapi import APIRouter, Depends, status, HTTPException, Request, BackgroundTasks, Header, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from applications.users.crud import create_user_in_db, get_user_by_email, activate_user_account
+from applications.users.crud import (create_user_in_db, get_user_by_email, activate_user_account,
+                                      add_favorite, remove_favorite, get_favorite_ids)
 from applications.users.shemas import BaseUserInfo, RegisterUserFields, NewComment
 from database.session_dependencies import get_async_session
 from services.rabbit.constants import SupportedQueues
@@ -44,16 +45,37 @@ async def create_user(
 @router_users.get('/verify/{user_uuid}')
 async def verify_user(user_uuid: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
     await activate_user_account(user_uuid, session)
-    return {"Status": "activated"}
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/login", status_code=302)
 
 
 @router_users.patch("/users/add_comment")
-async def add_comment_to_user(comment: dict = Body(...), user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+async def add_comment_to_user(comment: NewComment = Body(...), user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+    if user.comments is None:
+        user.comments = []
     user.comments.append({
-        "restaurant_id": comment["restaurant_id"],
-        "text": comment["text"],
-        "author_name": comment["author_name"]
+        "restaurant_id": comment.restaurant_id,
+        "text": comment.text,
+        "author_name": user.name
     })
     session.add(user)
     await session.commit()
     return {"status": "ok","comments": user.comments}
+
+
+@router_users.get("/favorites")
+async def list_favorites(user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+    ids = await get_favorite_ids(user.id, session)
+    return {"favorite_ids": ids}
+
+
+@router_users.post("/favorites/{restaurant_id}", status_code=status.HTTP_201_CREATED)
+async def add_favorite_restaurant(restaurant_id: int, user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+    await add_favorite(user.id, restaurant_id, session)
+    return {"status": "added", "restaurant_id": restaurant_id}
+
+
+@router_users.delete("/favorites/{restaurant_id}")
+async def remove_favorite_restaurant(restaurant_id: int, user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+    await remove_favorite(user.id, restaurant_id, session)
+    return {"status": "removed", "restaurant_id": restaurant_id}

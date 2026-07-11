@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from applications.auth.auth_handler import auth_handler
@@ -11,6 +12,10 @@ from database.session_dependencies import get_async_session
 router_auth = APIRouter()
 
 
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
 @router_auth.post("/login")
 async def user_login(
     data: OAuth2PasswordRequestForm = Depends(),
@@ -18,6 +23,16 @@ async def user_login(
 ):
     token_pair = await auth_handler.get_login_token_pairs(data, session)
     return token_pair
+
+
+@router_auth.post("/refresh")
+async def refresh_token(body: RefreshTokenRequest):
+    try:
+        payload = await auth_handler.decode_token(body.refresh_token)
+    except HTTPException:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+    tokens = await auth_handler.generate_token_pairs(payload["user_email"])
+    return tokens
 
 
 @router_auth.get("/get_my_info")

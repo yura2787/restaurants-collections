@@ -15,7 +15,17 @@
                     <button class="btn-search" type="submit">Знайти</button>
                 </form>
             </div>
-            {% include "components/login_comp.html" %}
+
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ url_for('map') }}" class="nav-link-pill" title="Карта">🗺️ Карта</a>
+                {% if user %}
+                <a href="{{ url_for('favorites') }}" class="nav-link-pill" title="Обране">♥ Обране</a>
+                {% endif %}
+
+                <button id="theme-toggle" class="theme-toggle" title="Тема" aria-label="Змінити тему">🌙</button>
+
+                {% include "components/login_comp.html" %}
+            </div>
         </div>
     </div>
 </nav>

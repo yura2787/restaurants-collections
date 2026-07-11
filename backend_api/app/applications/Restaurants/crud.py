@@ -9,7 +9,9 @@ from applications.Restaurants.schemas import SearchParamsSchema, SortEnum, SortB
 from applications.Restaurants.models_restaurants import Restaurants
 
 
-async def create_restaurant_in_db(restaurant_uuid, name, description, menu, detailed_description, comments, main_image, images, session) -> Restaurants:
+async def create_restaurant_in_db(restaurant_uuid, name, description, menu, detailed_description, comments, main_image, images, session,
+                                  cuisine=None, address=None, phone=None, working_hours=None,
+                                  price_range=None, latitude=None, longitude=None) -> Restaurants:
     new_restaurant = Restaurants(
         uuid_data=restaurant_uuid,
         name=name.strip(),
@@ -19,10 +21,23 @@ async def create_restaurant_in_db(restaurant_uuid, name, description, menu, deta
         detailed_description=detailed_description,
         main_image=main_image,
         images=images,
+        cuisine=cuisine,
+        address=address,
+        phone=phone,
+        working_hours=working_hours,
+        price_range=price_range,
+        latitude=latitude,
+        longitude=longitude,
     )
     session.add(new_restaurant)
     await session.commit()
     return new_restaurant
+
+
+async def get_cuisines(session: AsyncSession) -> list[str]:
+    query = select(Restaurants.cuisine).where(Restaurants.cuisine.isnot(None)).distinct()
+    result = await session.execute(query)
+    return sorted([c for c in result.scalars().all() if c])
 
 
 async def get_restaurants_data(params: SearchParamsSchema, session: AsyncSession):
@@ -30,6 +45,11 @@ async def get_restaurants_data(params: SearchParamsSchema, session: AsyncSession
     count_query = select(func.count()).select_from(Restaurants)
 
     order_direction = asc if params.order_direction == SortEnum.ASC else desc
+
+    if params.cuisine:
+        query = query.filter(Restaurants.cuisine == params.cuisine)
+        count_query = count_query.filter(Restaurants.cuisine == params.cuisine)
+
     if params.q:
         search_fields = [Restaurants.name, Restaurants.description]
         if params.use_sharp_q_filter:
@@ -44,6 +64,10 @@ async def get_restaurants_data(params: SearchParamsSchema, session: AsyncSession
             )
             query = query.filter(search_condition)
             count_query = count_query.filter(search_condition)
+
+    sort_column = getattr(Restaurants, params.sort_by.value, Restaurants.id)
+    query = query.order_by(order_direction(sort_column))
+    query = query.limit(params.limit).offset((params.page - 1) * params.limit)
 
     result = await session.execute(query)
     result_count = await session.execute(count_query)

@@ -21,4 +21,7 @@ RUN poetry install --no-ansi --no-root --no-root --no-interaction
 
 COPY /app /app
 
-EXPOSE 9999
+RUN useradd -m appuser
+USER appuser
+
+EXPOSE 12345
