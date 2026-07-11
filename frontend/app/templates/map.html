@@ -1,0 +1,54 @@
+{% extends "components/base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Карта ресторанів</h1>
+    <p>Знайдіть заклади поруч з вами</p>
+</div>
+
+<div class="map-wrapper">
+    <div id="map"></div>
+</div>
+
+{% if not restaurants %}
+<div class="empty-state">
+    <p>📍 Поки що жоден ресторан не має координат</p>
+</div>
+{% endif %}
+
+<script id="map-data" type="application/json">
+{{ restaurants | tojson }}
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  (function () {
+    var data = JSON.parse(document.getElementById('map-data').textContent || '[]');
+    var map = L.map('map').setView([50.4501, 30.5234], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap', maxZoom: 19
+    }).addTo(map);
+
+    var bounds = [];
+    data.forEach(function (r) {
+      if (!r.latitude || !r.longitude) return;
+      var marker = L.marker([r.latitude, r.longitude]).addTo(map);
+      marker.bindPopup(
+        '<div style="min-width:160px">' +
+        '<strong style="font-size:1rem">' + r.name + '</strong><br>' +
+        (r.cuisine ? '<span style="color:#b8900a">' + r.cuisine + '</span><br>' : '') +
+        '<a href="/restaurant/' + r.id + '" style="color:#e94560;font-weight:600">Детальніше →</a>' +
+        '</div>'
+      );
+      bounds.push([r.latitude, r.longitude]);
+    });
+    if (bounds.length) map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+  })();
+</script>
+{% endblock %}

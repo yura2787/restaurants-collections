@@ -1,0 +1,27 @@
+{% extends "components/base.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-hero">
+        <div class="profile-avatar">{{ user.name[0] | upper }}</div>
+        <h1 class="profile-name">{{ user.name }}</h1>
+        <p class="profile-email">{{ user.email }}</p>
+    </div>
+
+    <div class="profile-stats">
+        <a href="{{ url_for('favorites') }}" class="stat-card">
+            <div class="stat-num">{{ favorites_count }}</div>
+            <div class="stat-label">В обраному</div>
+        </a>
+        <div class="stat-card">
+            <div class="stat-num">{{ comments_count }}</div>
+            <div class="stat-label">Відгуків</div>
+        </div>
+    </div>
+
+    <div class="profile-actions">
+        <a href="{{ url_for('favorites') }}" class="btn-detail" style="max-width:260px;">♥ Мої улюблені</a>
+        <a href="{{ url_for('logout') }}" class="btn-back" style="background:linear-gradient(135deg,#e94560,#c73652);">Вийти з акаунту</a>
+    </div>
+</div>
+{% endblock %}
