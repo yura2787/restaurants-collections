@@ -12,6 +12,11 @@ A full-stack web application for discovering, browsing, and saving restaurants. 
 
 ---
 
+## 📸 Screenshots
+
+
+---
+
 ## ✨ Features
 
 - 🔐 **JWT Authentication** — secure sign-up / sign-in with access & refresh tokens, email verification
