@@ -4,7 +4,7 @@ from fastapi.responses import  RedirectResponse, JSONResponse
 
 from backend_api.api import (get_current_user_with_token, login_user, get_restaurants, get_restaurant,
                              get_user_info, get_cuisines, get_favorites, add_favorite, remove_favorite,
-                             register_user, send_comment, get_comments)
+                             register_user, send_comment, get_comments, update_comment, delete_comment)
 
 router = APIRouter()
 
@@ -118,6 +118,32 @@ async def add_comment(
     )
 
 
+@router.patch("/comment/{restaurant_id}/{comment_id}", name="update_comment")
+async def patch_comment(
+    restaurant_id: int,
+    comment_id: int,
+    request: Request,
+    user: dict = Depends(get_current_user_with_token)
+):
+    if not user.get("access_token"):
+        return JSONResponse({"error": "not_authenticated"}, status_code=401)
+    body = await request.json()
+    result = await update_comment(user["access_token"], restaurant_id, comment_id, body.get("text", ""))
+    if result.get("id"):
+        return JSONResponse({"ok": True, "text": result["text"]})
+    return JSONResponse({"error": "failed"}, status_code=400)
+
+
+@router.delete("/comment/{restaurant_id}/{comment_id}", name="delete_comment")
+async def remove_comment(
+    restaurant_id: int,
+    comment_id: int,
+    user: dict = Depends(get_current_user_with_token)
+):
+    if not user.get("access_token"):
+        return JSONResponse({"error": "not_authenticated"}, status_code=401)
+    ok = await delete_comment(user["access_token"], restaurant_id, comment_id)
+    return JSONResponse({"ok": ok})
 
 
 

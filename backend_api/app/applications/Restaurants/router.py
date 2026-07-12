@@ -19,6 +19,7 @@ class CommentIn(BaseModel):
 
 class CommentOut(BaseModel):
     id: int
+    user_id: int | None
     author_name: str
     text: str
 
@@ -119,8 +120,34 @@ async def get_comments(pk: int, session: AsyncSession = Depends(get_async_sessio
 
 @router_restaurants.post('/{pk}/comments', response_model=CommentOut, status_code=status.HTTP_201_CREATED)
 async def add_comment(pk: int, body: CommentIn, user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
-    comment = RestaurantComment(restaurant_id=pk, author_name=user.name, text=body.text)
+    comment = RestaurantComment(restaurant_id=pk, user_id=user.id, author_name=user.name, text=body.text)
     session.add(comment)
     await session.commit()
     await session.refresh(comment)
     return comment
+
+
+@router_restaurants.patch('/{pk}/comments/{comment_id}', response_model=CommentOut)
+async def update_comment(pk: int, comment_id: int, body: CommentIn, user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(RestaurantComment).where(RestaurantComment.id == comment_id, RestaurantComment.restaurant_id == pk))
+    comment = result.scalar_one_or_none()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    if comment.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Not your comment")
+    comment.text = body.text
+    await session.commit()
+    await session.refresh(comment)
+    return comment
+
+
+@router_restaurants.delete('/{pk}/comments/{comment_id}', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_comment(pk: int, comment_id: int, user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(select(RestaurantComment).where(RestaurantComment.id == comment_id, RestaurantComment.restaurant_id == pk))
+    comment = result.scalar_one_or_none()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    if comment.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Not your comment")
+    await session.delete(comment)
+    await session.commit()

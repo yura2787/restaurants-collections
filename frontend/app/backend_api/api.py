@@ -168,3 +168,30 @@ async def get_comments(restaurant_id: int) -> list:
     except Exception as e:
         logger.error(f"get_comments error: {e}")
         return []
+
+
+async def update_comment(access_token: str, restaurant_id: int, comment_id: int, text: str) -> dict:
+    try:
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.patch(
+                url=f'{settings.BACKEND_API}/restaurants/{restaurant_id}/comments/{comment_id}',
+                json={"text": text},
+                headers={"Authorization": f"Bearer {access_token}"}
+            )
+            return response.json()
+    except Exception as e:
+        logger.error(f"update_comment error: {e}")
+        return {}
+
+
+async def delete_comment(access_token: str, restaurant_id: int, comment_id: int) -> bool:
+    try:
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.delete(
+                url=f'{settings.BACKEND_API}/restaurants/{restaurant_id}/comments/{comment_id}',
+                headers={"Authorization": f"Bearer {access_token}"}
+            )
+            return response.status_code == 204
+    except Exception as e:
+        logger.error(f"delete_comment error: {e}")
+        return False

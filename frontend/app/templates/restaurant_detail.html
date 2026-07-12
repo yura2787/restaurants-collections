@@ -1,5 +1,140 @@
 {% extends "components/base.html" %}
 
+{% block head %}
+<style>
+.reviews-section-title { font-size:1.1rem; font-weight:700; margin-bottom:1.2rem; color:var(--ink); }
+.review-card {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 1.1rem 1.3rem 1rem 2.8rem;
+  margin-bottom: 1rem;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(20,20,43,0.04);
+}
+.review-card::before {
+  content: "\201C";
+  position: absolute;
+  left: 0.8rem;
+  top: 0.6rem;
+  font-size: 2rem;
+  color: #b8900a;
+  opacity: 0.5;
+  font-family: 'Playfair Display', serif;
+  line-height: 1;
+}
+.review-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+.review-card-author {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #b8900a;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.review-card-text { margin:0; font-size:0.97rem; color:var(--ink); line-height:1.6; }
+.review-card-actions { display:flex; gap:0.4rem; }
+.rc-btn {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.76rem;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.rc-btn:hover { background: var(--line); color: var(--ink); }
+.rc-btn-delete:hover { border-color: #e94560; color: #e94560; background: rgba(233,69,96,0.07); }
+
+.no-reviews-msg {
+  text-align: center;
+  color: #a8a8b3;
+  font-style: italic;
+  padding: 1.5rem 0 0.5rem;
+}
+.review-divider {
+  border: none;
+  border-top: 1.5px solid var(--line);
+  margin: 1.6rem 0 1.4rem;
+}
+.write-review-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+  display: block;
+}
+.review-textarea {
+  width: 100%;
+  min-height: 110px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.96rem;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  resize: vertical;
+  display: block;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.review-textarea:focus {
+  outline: none;
+  border-color: #e94560;
+  box-shadow: 0 0 0 3px rgba(233,69,96,0.1);
+}
+.review-submit-btn {
+  margin-top: 0.75rem;
+  display: inline-block;
+  background: linear-gradient(135deg, #e94560, #c73652);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.65rem 1.8rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.review-submit-btn:hover {
+  box-shadow: 0 6px 18px rgba(233,69,96,0.38);
+  transform: translateY(-1px);
+}
+.edit-textarea {
+  width: 100%;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  resize: vertical;
+  min-height: 70px;
+  box-sizing: border-box;
+  margin-top: 0.5rem;
+}
+.edit-actions { display:flex; gap:0.5rem; margin-top:0.5rem; }
+.edit-save-btn {
+  background: linear-gradient(135deg,#e94560,#c73652);
+  color:#fff; border:none; border-radius:50px;
+  padding:0.4rem 1.2rem; font-size:0.85rem; font-weight:700; cursor:pointer;
+}
+.edit-cancel-btn {
+  background:none; border:1.5px solid var(--line); border-radius:50px;
+  padding:0.4rem 1.1rem; font-size:0.85rem; cursor:pointer; color:var(--ink);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="detail-container">
 
@@ -69,26 +204,44 @@
     {% endif %}
 
     <div class="detail-card reviews-card">
-        <h3>Reviews</h3>
+        <h3 class="reviews-section-title">Reviews</h3>
+
         {% if comments %}
             {% for item in comments %}
-            <div class="review-item">
-                <span class="review-author">👤 {{ item.author_name }}</span>
-                <p class="review-text">{{ item.text }}</p>
+            <div class="review-card" data-comment-id="{{ item.id }}" data-restaurant-id="{{ restaurant.id }}">
+                <div class="review-card-header">
+                    <span class="review-card-author">👤 {{ item.author_name }}</span>
+                    {% if user and user.id == item.user_id %}
+                    <div class="review-card-actions">
+                        <button class="rc-btn" onclick="startEdit(this)">✏️ Edit</button>
+                        <button class="rc-btn rc-btn-delete" onclick="deleteReview(this)">🗑️ Delete</button>
+                    </div>
+                    {% endif %}
+                </div>
+                <p class="review-card-text">{{ item.text }}</p>
+                <div class="review-edit-form" style="display:none;">
+                    <textarea class="edit-textarea">{{ item.text }}</textarea>
+                    <div class="edit-actions">
+                        <button class="edit-save-btn" onclick="saveEdit(this)">Save</button>
+                        <button class="edit-cancel-btn" onclick="cancelEdit(this)">Cancel</button>
+                    </div>
+                </div>
             </div>
             {% endfor %}
         {% else %}
-            <p class="no-reviews">No reviews yet</p>
+            <p class="no-reviews-msg" id="no-reviews-msg">No reviews yet</p>
         {% endif %}
 
         {% if user %}
-        <form method="post" action="{{ url_for('add_comment', restaurant_id=restaurant.id) }}" class="comment-form">
-            <textarea name="comment_text" class="comment-input" placeholder="Write a review..." required minlength="3" maxlength="500"></textarea>
-            <button type="submit" class="btn-submit" style="max-width:180px;">Post review</button>
+        <hr class="review-divider">
+        <form method="post" action="{{ url_for('add_comment', restaurant_id=restaurant.id) }}">
+            <span class="write-review-label">Leave a review</span>
+            <textarea name="comment_text" class="review-textarea" placeholder="Share your experience with this restaurant..." required minlength="3" maxlength="500"></textarea>
+            <button type="submit" class="review-submit-btn">Post review →</button>
         </form>
         {% else %}
-        <p class="no-reviews" style="margin-top:1rem;">
-            <a href="{{ url_for('login') }}" style="color:#e94560;">Sign in</a> to leave a review
+        <p class="no-reviews-msg" style="margin-top:1rem;">
+            <a href="{{ url_for('login') }}" style="color:#e94560;font-weight:600;">Sign in</a> to leave a review
         </p>
         {% endif %}
     </div>
@@ -101,4 +254,74 @@
     <span class="lightbox-close" aria-label="Close">✕</span>
     <img src="" alt="Restaurant photo" id="lightbox-img">
 </div>
+
+{% block scripts %}
+<script>
+function startEdit(btn) {
+    var card = btn.closest('.review-item');
+    card.querySelector('.review-text').style.display = 'none';
+    card.querySelector('.review-edit-form').style.display = 'block';
+    card.querySelector('.review-actions').style.display = 'none';
+}
+
+function cancelEdit(btn) {
+    var card = btn.closest('.review-item');
+    card.querySelector('.review-text').style.display = '';
+    card.querySelector('.review-edit-form').style.display = 'none';
+    card.querySelector('.review-actions').style.display = '';
+}
+
+function saveEdit(btn) {
+    var card = btn.closest('.review-item');
+    var restaurantId = card.getAttribute('data-restaurant-id');
+    var commentId = card.getAttribute('data-comment-id');
+    var text = card.querySelector('.edit-textarea').value.trim();
+    if (!text) return;
+    btn.disabled = true;
+    fetch('/comment/' + restaurantId + '/' + commentId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'fetch' },
+        body: JSON.stringify({ text: text })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.ok) {
+            card.querySelector('.review-text').textContent = data.text;
+            card.querySelector('.edit-textarea').value = data.text;
+            cancelEdit(btn);
+        }
+    })
+    .finally(function() { btn.disabled = false; });
+}
+
+function deleteReview(btn) {
+    if (!confirm('Delete this review?')) return;
+    var card = btn.closest('.review-item');
+    var restaurantId = card.getAttribute('data-restaurant-id');
+    var commentId = card.getAttribute('data-comment-id');
+    fetch('/comment/' + restaurantId + '/' + commentId, {
+        method: 'DELETE',
+        headers: { 'X-Requested-With': 'fetch' }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.ok) {
+            card.remove();
+            var remaining = document.querySelectorAll('.review-item');
+            if (remaining.length === 0) {
+                var noMsg = document.getElementById('no-reviews-msg');
+                if (!noMsg) {
+                    var p = document.createElement('p');
+                    p.className = 'no-reviews';
+                    p.id = 'no-reviews-msg';
+                    p.textContent = 'No reviews yet';
+                    document.querySelector('.reviews-card').insertBefore(p, document.querySelector('.comment-form'));
+                }
+            }
+        }
+    });
+}
+</script>
 {% endblock %}
+{% endblock %}
+
