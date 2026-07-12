@@ -14,29 +14,25 @@ A full-stack web application for discovering, browsing, and saving restaurants. 
 
 ## 📸 Screenshots
 
-<img width="3402" height="1924" alt="2026-07-12_19-14" src="https://github.com/user-attachments/assets/f4678323-cd7d-41af-b13d-45ae1371aae4" />
+<img width="3402" height="1924" alt="2026-07-12_19-14" src="https://github.com/user-attachments/assets/3332bcf9-252b-46c5-ad19-6562661bd0f2" />
 
-<img width="3412" height="1904" alt="2026-07-12_19-14_1" src="https://github.com/user-attachments/assets/231d7737-106e-4a73-8864-f9ba95aa3910" />
+<img width="3412" height="1904" alt="2026-07-12_19-14_1" src="https://github.com/user-attachments/assets/03caa86b-c898-4704-a8ab-4ddcdce98401" />
 
+<img width="2620" height="1644" alt="2026-07-12_19-22" src="https://github.com/user-attachments/assets/04201828-a38f-4a2c-9dc1-1b0aa750daea" />
 
-<img width="2620" height="1644" alt="2026-07-12_19-22" src="https://github.com/user-attachments/assets/b63fb8c5-7598-4124-8bc6-af956e0e96cb" />
+<img width="2974" height="1202" alt="2026-07-12_19-22_1" src="https://github.com/user-attachments/assets/a5853cd1-b404-42c2-9dbb-5636efb19cbe" />
 
+<img width="3332" height="1890" alt="2026-07-12_19-23_3" src="https://github.com/user-attachments/assets/fa2d8fc1-62c0-4348-b388-6b6729089423" />
 
-<img width="2894" height="1774" alt="2026-07-12_19-23" src="https://github.com/user-attachments/assets/48e76568-2b1d-41bd-b37b-83e6f38a31da" />
+<img width="2894" height="1774" alt="2026-07-12_19-23" src="https://github.com/user-attachments/assets/edafeb41-d8b6-47fe-809d-0f0beeb867f7" />
 
-<img width="2974" height="1202" alt="2026-07-12_19-22_1" src="https://github.com/user-attachments/assets/733e008c-d8ba-498a-befa-4e211d4c3d3a" />
+<img width="3390" height="1820" alt="2026-07-12_19-23_2" src="https://github.com/user-attachments/assets/93f1e837-3755-4e58-b020-21c14676ec32" />
 
-<img width="2844" height="1050" alt="2026-07-12_19-23_1" src="https://github.com/user-attachments/assets/d97d8b45-9613-4380-95ab-ecdd657a88c4" />
+<img width="2844" height="1050" alt="2026-07-12_19-23_1" src="https://github.com/user-attachments/assets/ba5be506-a37e-4137-b75f-9022ca49d7ce" />
 
+<img width="3392" height="1772" alt="2026-07-12_19-24" src="https://github.com/user-attachments/assets/e7e8e390-bbb6-4391-8b85-2ea4b7a5fab9" />
 
-
-
-
-
-<img width="3390" height="1820" alt="2026-07-12_19-23_2" src="https://github.com/user-attachments/assets/553d036c-6a1a-469e-aebc-928a76cdafe0" />
-
-<img width="3392" height="1772" alt="2026-07-12_19-24" src="https://github.com/user-attachments/assets/b609318d-33b5-4ea8-bba5-7f6247824ebf" />
-
+<img width="3388" height="1654" alt="2026-07-12_19-24_1" src="https://github.com/user-attachments/assets/6234ec9a-ed8e-4267-8f63-91743e7282e0" />
 
 ---
 
