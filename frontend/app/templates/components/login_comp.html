@@ -1,11 +1,11 @@
 {% if user %}
 <div class="d-flex align-items-center gap-2">
   <a href="{{ url_for('profile') }}" class="user-pill" style="text-decoration:none;">👤 {{ user.name }}</a>
-  <a href="{{ url_for('logout') }}" class="btn-logout">Вийти</a>
+  <a href="{{ url_for('logout') }}" class="btn-logout">Log out</a>
 </div>
 {% else %}
 <div class="d-flex gap-2">
-  <a href="{{ url_for('login') }}" class="btn-login">Увійти</a>
-  <a href="{{ url_for('register') }}" class="btn-register">Реєстрація</a>
+  <a href="{{ url_for('login') }}" class="btn-login">Sign in</a>
+  <a href="{{ url_for('register') }}" class="btn-register">Sign up</a>
 </div>
 {% endif %}

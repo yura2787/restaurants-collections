@@ -6,8 +6,8 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Карта ресторанів</h1>
-    <p>Знайдіть заклади поруч з вами</p>
+    <h1>Restaurant Map</h1>
+    <p>Find places near you</p>
 </div>
 
 <div class="map-wrapper">
@@ -16,7 +16,7 @@
 
 {% if not restaurants %}
 <div class="empty-state">
-    <p>📍 Поки що жоден ресторан не має координат</p>
+    <p>📍 No restaurants have coordinates yet</p>
 </div>
 {% endif %}
 
@@ -43,7 +43,7 @@
         '<div style="min-width:160px">' +
         '<strong style="font-size:1rem">' + r.name + '</strong><br>' +
         (r.cuisine ? '<span style="color:#b8900a">' + r.cuisine + '</span><br>' : '') +
-        '<a href="/restaurant/' + r.id + '" style="color:#e94560;font-weight:600">Детальніше →</a>' +
+        '<a href="/restaurant/' + r.id + '" style="color:#e94560;font-weight:600">View details →</a>' +
         '</div>'
       );
       bounds.push([r.latitude, r.longitude]);

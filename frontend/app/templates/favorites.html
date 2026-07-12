@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Мої улюблені</h1>
-    <p>Ресторани, які ви зберегли</p>
+    <h1>My Favourites</h1>
+    <p>Restaurants you have saved</p>
 </div>
 
 <div class="restaurants-grid">
@@ -13,7 +13,7 @@
             <img src="{{ restaurant.main_image }}" alt="{{ restaurant.name }}" class="r-card__img">
             {% if restaurant.cuisine %}<span class="r-card__cuisine">{{ restaurant.cuisine }}</span>{% endif %}
             {% if restaurant.price_range %}<span class="r-card__price">{{ restaurant.price_range }}</span>{% endif %}
-            <button class="fav-btn fav-btn--active" data-id="{{ restaurant.id }}" aria-label="В обране">♥</button>
+            <button class="fav-btn fav-btn--active" data-id="{{ restaurant.id }}" aria-label="Remove from favourites">♥</button>
         </div>
         <div class="r-card__body">
             <h2 class="r-card__title">{{ restaurant.name }}</h2>
@@ -21,14 +21,14 @@
         </div>
         <div class="r-card__footer">
             <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}" class="btn-detail">
-                Дізнатися більше →
+                Learn more →
             </a>
         </div>
     </div>
     {% else %}
     <div class="empty-state" style="grid-column: 1/-1;">
-        <p>💔 Ви ще нічого не додали в обране</p>
-        <a href="{{ url_for('index') }}" class="btn-back" style="margin-top:1rem;">← До ресторанів</a>
+        <p>💔 You haven't saved any restaurants yet</p>
+        <a href="{{ url_for('index') }}" class="btn-back" style="margin-top:1rem;">← Back to restaurants</a>
     </div>
     {% endfor %}
 </div>

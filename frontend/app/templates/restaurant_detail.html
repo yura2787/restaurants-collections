@@ -7,7 +7,7 @@
         <h1 class="detail-title">{{ restaurant.name }}</h1>
         {% if user %}
         <button class="fav-btn fav-btn--detail {% if is_favorite %}fav-btn--active{% endif %}"
-                data-id="{{ restaurant.id }}" aria-label="В обране">
+                data-id="{{ restaurant.id }}" aria-label="Add to favourites">
             {% if is_favorite %}♥{% else %}♡{% endif %}
         </button>
         {% endif %}
@@ -29,7 +29,7 @@
             <div class="carousel-inner">
                 {% for image in restaurant.images %}
                 <div class="carousel-item {% if loop.first %}active{% endif %}">
-                    <img src="{{ image }}" class="carousel-img d-block w-100 lightbox-img" alt="Фото ресторану" style="cursor:zoom-in;">
+                    <img src="{{ image }}" class="carousel-img d-block w-100 lightbox-img" alt="Restaurant photo" style="cursor:zoom-in;">
                 </div>
                 {% endfor %}
             </div>
@@ -46,12 +46,12 @@
     {% endif %}
 
     <div class="detail-card">
-        <h3>Про ресторан</h3>
+        <h3>About</h3>
         <p>{{ restaurant.detailed_description or restaurant.description }}</p>
     </div>
 
     <div class="detail-card menu-card">
-        <h3>Меню</h3>
+        <h3>Menu</h3>
         <ul>
             {% for item in restaurant.menu.split(';') %}
                 {% if item.strip() %}
@@ -63,28 +63,28 @@
 
     {% if restaurant.latitude and restaurant.longitude %}
     <div class="detail-card">
-        <h3>Розташування</h3>
-        <a href="{{ url_for('map') }}" class="btn-detail" style="max-width:220px;">🗺️ Показати на карті</a>
+        <h3>Location</h3>
+        <a href="{{ url_for('map') }}" class="btn-detail" style="max-width:220px;">🗺️ Show on map</a>
     </div>
     {% endif %}
 
     <div class="detail-card reviews-card">
-        <h3>Відгуки</h3>
+        <h3>Reviews</h3>
         {% if comments %}
             {% for item in comments %}
                 <div class="review-item">{{ item }}</div>
             {% endfor %}
         {% else %}
-            <p class="no-reviews">Відгуків поки немає</p>
+            <p class="no-reviews">No reviews yet</p>
         {% endif %}
     </div>
 
-    <a href="{{ url_for('index') }}" class="btn-back">← Повернутися на головну</a>
+    <a href="{{ url_for('index') }}" class="btn-back">← Back to home</a>
 
 </div>
 
-<div id="lightbox" class="lightbox" role="dialog" aria-label="Перегляд фото">
-    <span class="lightbox-close" aria-label="Закрити">✕</span>
-    <img src="" alt="Фото ресторану" id="lightbox-img">
+<div id="lightbox" class="lightbox" role="dialog" aria-label="Photo viewer">
+    <span class="lightbox-close" aria-label="Close">✕</span>
+    <img src="" alt="Restaurant photo" id="lightbox-img">
 </div>
 {% endblock %}

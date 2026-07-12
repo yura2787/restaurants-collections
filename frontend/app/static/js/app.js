@@ -43,7 +43,7 @@
     btn.disabled = true;
     fetch("/toggle_favorite/" + id, { method: "POST", headers: { "X-Requested-With": "fetch" } })
       .then(function (r) {
-        if (r.status === 401) { toast("Увійдіть, щоб додавати в обране", "info"); return null; }
+        if (r.status === 401) { toast("Sign in to save favourites", "info"); return null; }
         return r.json();
       })
       .then(function (data) {
@@ -51,18 +51,18 @@
         if (data.is_favorite) {
           btn.classList.add("fav-btn--active");
           btn.textContent = "♥";
-          toast("Додано в обране ♥", "success");
+          toast("Added to favourites ♥", "success");
         } else {
           btn.classList.remove("fav-btn--active");
           btn.textContent = "♡";
-          toast("Видалено з обраного", "info");
+          toast("Removed from favourites", "info");
           if (document.body.getAttribute("data-page") === "favorites") {
             var card = btn.closest(".r-card");
             if (card) card.remove();
           }
         }
       })
-      .catch(function () { toast("Помилка. Спробуйте ще раз", "error"); })
+      .catch(function () { toast("Something went wrong. Please try again", "error"); })
       .finally(function () { btn.disabled = false; });
   });
 

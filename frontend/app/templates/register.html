@@ -3,7 +3,7 @@
 {% block content %}
 <div class="auth-wrapper">
   <div class="auth-card">
-    <h3>Реєстрація</h3>
+    <h3>Create an account</h3>
 
     {% if errors %}
     <div class="alert alert-danger" role="alert">
@@ -19,21 +19,21 @@
       </div>
 
       <div class="mb-3">
-        <label for="IdName" class="form-label">Ім'я</label>
+        <label for="IdName" class="form-label">Name</label>
         <input value="{{ entered_name }}" name="user_name" required type="text" minlength="3" class="form-control"
-               id="IdName" placeholder="Ваше ім'я">
+               id="IdName" placeholder="Your name">
       </div>
 
       <div class="mb-4">
-        <label for="exampleInputPassword1" class="form-label">Пароль</label>
+        <label for="exampleInputPassword1" class="form-label">Password</label>
         <input value="" name="password" required minlength="8" type="password" class="form-control"
-               id="exampleInputPassword1" placeholder="Мінімум 8 символів">
+               id="exampleInputPassword1" placeholder="Minimum 8 characters">
       </div>
 
-      <button type="submit" class="btn-submit">Створити акаунт</button>
+      <button type="submit" class="btn-submit">Create account</button>
     </form>
     <p class="text-center mt-3 mb-0" style="font-size:0.9rem; color:#6b6f80;">
-      Вже є акаунт? <a href="{{ url_for('login') }}" style="color:#e94560; text-decoration:none; font-weight:600;">Увійти</a>
+      Already have an account? <a href="{{ url_for('login') }}" style="color:#e94560; text-decoration:none; font-weight:600;">Sign in</a>
     </p>
   </div>
 </div>
