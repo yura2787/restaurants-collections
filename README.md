@@ -21,9 +21,12 @@ A full-stack web application for discovering, browsing, and saving restaurants. 
 
 <img width="2620" height="1644" alt="2026-07-12_19-22" src="https://github.com/user-attachments/assets/b63fb8c5-7598-4124-8bc6-af956e0e96cb" />
 
-<img width="2974" height="1202" alt="2026-07-12_19-22_1" src="https://github.com/user-attachments/assets/733e008c-d8ba-498a-befa-4e211d4c3d3a" />
 
 <img width="2894" height="1774" alt="2026-07-12_19-23" src="https://github.com/user-attachments/assets/48e76568-2b1d-41bd-b37b-83e6f38a31da" />
+
+<img width="2974" height="1202" alt="2026-07-12_19-22_1" src="https://github.com/user-attachments/assets/733e008c-d8ba-498a-befa-4e211d4c3d3a" />
+
+
 
 <img width="2844" height="1050" alt="2026-07-12_19-23_1" src="https://github.com/user-attachments/assets/d97d8b45-9613-4380-95ab-ecdd657a88c4" />
 
