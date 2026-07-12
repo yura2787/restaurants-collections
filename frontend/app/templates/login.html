@@ -1,24 +1,28 @@
 {% extends "components/base.html" %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-  <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
-    <h3 class="text-center mb-4">ACCOUNT LOGIN</h3>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h3>Sign in to your account</h3>
+    {% if errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ errors[0] }}
+    </div>
+    {% endif %}
     <form method="post" action="{{ url_for('login') }}">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email</label>
-        <input type="email" name="user_email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <input type="email" name="user_email" class="form-control" id="exampleInputEmail1" placeholder="name@example.com">
       </div>
-      <div class="mb-3">
+      <div class="mb-4">
         <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+        <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="••••••••">
       </div>
-      <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Submit</button>
+      <button type="submit" class="btn-submit">Sign in</button>
     </form>
+    <p class="text-center mt-3 mb-0" style="font-size:0.9rem; color:#6b6f80;">
+      Don't have an account? <a href="{{ url_for('register') }}" style="color:#e94560; text-decoration:none; font-weight:600;">Sign up</a>
+    </p>
   </div>
 </div>
 {% endblock %}

@@ -21,11 +21,14 @@ class AuthHandler:
         user = await get_user_by_email(user_email, session)
 
         if not user:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
         is_valid_password = await PasswordEncrypt.verify_password(user_password, user.hashed_password)
         if not is_valid_password:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Incorrect password")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+        if not user.is_verified:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Email not verified")
 
         tokens = await self.generate_token_pairs(user.email)
         return tokens
@@ -40,7 +43,6 @@ class AuthHandler:
         now = datetime.now()
         time_payload = {"exp": now + expiry, "iat": now}
         token = jwt.encode(payload | time_payload, self.secret, self.algorithm)
-        print(token)
         return token
 
     async def decode_token(self, token: str) -> dict:

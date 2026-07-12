@@ -1,7 +1,5 @@
 from pydantic import BaseModel, Field
 from enum import StrEnum
-
-from pydantic import BaseModel, Field
 from typing import Annotated, Optional
 
 class RestaurantSchema(BaseModel):
@@ -13,6 +11,13 @@ class RestaurantSchema(BaseModel):
     detailed_description: Optional[str] = None
     main_image: str
     images: list[str]
+    cuisine: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
+    working_hours: Optional[str] = None
+    price_range: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 class SortEnum(StrEnum):
     ASC = 'asc'
@@ -21,11 +26,12 @@ class SortEnum(StrEnum):
 
 class SortByEnum(StrEnum):
     ID = 'id'
-    PRICE = 'price'
+    NAME = 'name'
 
 
 class SearchParamsSchema(BaseModel):
     q: Annotated[Optional[str], Field(default=None)] = None
+    cuisine: Annotated[Optional[str], Field(default=None)] = None
     page: Annotated[int, Field(default=1, ge=1)]
     limit: Annotated[int, Field(default=10, ge=1, le=50)]
     order_direction: SortEnum = SortEnum.DESC

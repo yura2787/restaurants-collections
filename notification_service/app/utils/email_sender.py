@@ -40,7 +40,8 @@ def send_email(
             basename = os.path.basename(attachment)
             filesize = os.path.getsize(attachment)
             file = MIMEBase('application', f'octet-stream; name={basename}')
-            file.set_payload(open(attachment, 'br').read())
+            with open(attachment, 'rb') as f:
+                file.set_payload(f.read())
             file.add_header('Content-Description', attachment)
             file.add_header(
                 'Content-Description',

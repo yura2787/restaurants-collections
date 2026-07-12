@@ -1,0 +1,35 @@
+{% extends "components/base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h1>My Favourites</h1>
+    <p>Restaurants you have saved</p>
+</div>
+
+<div class="restaurants-grid">
+    {% for restaurant in restaurants %}
+    <div class="r-card">
+        <div class="r-card__img-wrap">
+            <img src="{{ restaurant.main_image }}" alt="{{ restaurant.name }}" class="r-card__img">
+            {% if restaurant.cuisine %}<span class="r-card__cuisine">{{ restaurant.cuisine }}</span>{% endif %}
+            {% if restaurant.price_range %}<span class="r-card__price">{{ restaurant.price_range }}</span>{% endif %}
+            <button class="fav-btn fav-btn--active" data-id="{{ restaurant.id }}" aria-label="Remove from favourites">♥</button>
+        </div>
+        <div class="r-card__body">
+            <h2 class="r-card__title">{{ restaurant.name }}</h2>
+            <p class="r-card__desc">{{ restaurant.description }}</p>
+        </div>
+        <div class="r-card__footer">
+            <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}" class="btn-detail">
+                Learn more →
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state" style="grid-column: 1/-1;">
+        <p>💔 You haven't saved any restaurants yet</p>
+        <a href="{{ url_for('index') }}" class="btn-back" style="margin-top:1rem;">← Back to restaurants</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

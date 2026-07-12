@@ -1,6 +1,27 @@
 <div class="page-header">
-    <h1>Ресторани</h1>
-    <p>Знайдіть ідеальне місце для відпочинку</p>
+    <h1>Restaurants</h1>
+    <p>Find the perfect place to dine</p>
+</div>
+
+<div class="filter-bar">
+    <div class="cuisine-chips">
+        <a href="{{ url_for('index') }}?sort={{ active_sort }}&direction={{ active_direction }}"
+           class="chip {% if not active_cuisine %}chip--active{% endif %}">All</a>
+        {% for c in cuisines %}
+        <a href="{{ url_for('index') }}?cuisine={{ c }}&sort={{ active_sort }}&direction={{ active_direction }}"
+           class="chip {% if active_cuisine == c %}chip--active{% endif %}">{{ c }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="sort-box">
+        <label>Sort:</label>
+        <select id="sort-select" data-cuisine="{{ active_cuisine }}">
+            <option value="id|desc" {% if active_sort=='id' and active_direction=='desc' %}selected{% endif %}>Newest first</option>
+            <option value="id|asc" {% if active_sort=='id' and active_direction=='asc' %}selected{% endif %}>Oldest first</option>
+            <option value="name|asc" {% if active_sort=='name' and active_direction=='asc' %}selected{% endif %}>Name A–Z</option>
+            <option value="name|desc" {% if active_sort=='name' and active_direction=='desc' %}selected{% endif %}>Name Z–A</option>
+        </select>
+    </div>
 </div>
 
 <div class="restaurants-grid">
@@ -8,33 +29,56 @@
     <div class="r-card">
         <div class="r-card__img-wrap">
             <img src="{{ restaurant.main_image }}" alt="{{ restaurant.name }}" class="r-card__img">
+            {% if restaurant.cuisine %}<span class="r-card__cuisine">{{ restaurant.cuisine }}</span>{% endif %}
+            {% if restaurant.price_range %}<span class="r-card__price">{{ restaurant.price_range }}</span>{% endif %}
+            {% if user %}
+            <button class="fav-btn {% if restaurant.is_favorite %}fav-btn--active{% endif %}"
+                    data-id="{{ restaurant.id }}" aria-label="Add to favourites">
+                {% if restaurant.is_favorite %}♥{% else %}♡{% endif %}
+            </button>
+            {% endif %}
         </div>
         <div class="r-card__body">
             <h2 class="r-card__title">{{ restaurant.name }}</h2>
             <p class="r-card__desc">{{ restaurant.description }}</p>
 
             <div class="r-card__menu">
-                <div class="r-card__menu-title">Меню</div>
+                <div class="r-card__menu-title">Menu</div>
                 <ul>
                     {% set items = restaurant.menu.split(';') %}
                     {% for item in items[:4] %}
                         <li>{{ item.strip() }}</li>
                     {% endfor %}
                     {% if items|length > 4 %}
-                        <li style="color:#b8900a; font-weight:600;">+ ще {{ items|length - 4 }} страви...</li>
+                        <li style="color:#b8900a; font-weight:600;">+ {{ items|length - 4 }} more dishes...</li>
                     {% endif %}
                 </ul>
             </div>
         </div>
         <div class="r-card__footer">
             <a href="{{ url_for('restaurant_detail', restaurant_id=restaurant.id) }}" class="btn-detail">
-                Дізнатися більше →
+                Learn more →
             </a>
         </div>
     </div>
     {% else %}
     <div class="empty-state" style="grid-column: 1/-1;">
-        <p>😔 Ресторани не знайдено</p>
+        <p>😔 No restaurants found</p>
     </div>
     {% endfor %}
 </div>
+
+{% if total_pages and total_pages > 1 %}
+<div class="pagination-bar">
+    {% set base = url_for('index') ~ '?cuisine=' ~ active_cuisine ~ '&sort=' ~ active_sort ~ '&direction=' ~ active_direction %}
+    {% if current_page > 1 %}
+    <a href="{{ base }}&page={{ current_page - 1 }}" class="page-btn">←</a>
+    {% endif %}
+    {% for p in range(1, total_pages + 1) %}
+    <a href="{{ base }}&page={{ p }}" class="page-btn {% if p == current_page %}page-btn--active{% endif %}">{{ p }}</a>
+    {% endfor %}
+    {% if current_page < total_pages %}
+    <a href="{{ base }}&page={{ current_page + 1 }}" class="page-btn">→</a>
+    {% endif %}
+</div>
+{% endif %}

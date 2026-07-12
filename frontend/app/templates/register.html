@@ -1,9 +1,9 @@
-'{% extends "components/base.html" %}
+{% extends "components/base.html" %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-  <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 450px;">
-    <h3 class="text-center mb-4">REGISTRATION</h3>
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h3>Create an account</h3>
 
     {% if errors %}
     <div class="alert alert-danger" role="alert">
@@ -15,23 +15,26 @@
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Email</label>
         <input value="{{ entered_email }}" name="user_email" required type="email" class="form-control"
-               id="exampleInputEmail1" aria-describedby="emailHelp">
+               id="exampleInputEmail1" placeholder="name@example.com">
       </div>
 
       <div class="mb-3">
         <label for="IdName" class="form-label">Name</label>
         <input value="{{ entered_name }}" name="user_name" required type="text" minlength="3" class="form-control"
-               id="IdName" aria-describedby="userName">
+               id="IdName" placeholder="Your name">
       </div>
 
-      <div class="mb-3">
+      <div class="mb-4">
         <label for="exampleInputPassword1" class="form-label">Password</label>
         <input value="" name="password" required minlength="8" type="password" class="form-control"
-               id="exampleInputPassword1">
+               id="exampleInputPassword1" placeholder="Minimum 8 characters">
       </div>
 
-      <button type="submit" class="btn btn-primary w-100">Submit</button>
+      <button type="submit" class="btn-submit">Create account</button>
     </form>
+    <p class="text-center mt-3 mb-0" style="font-size:0.9rem; color:#6b6f80;">
+      Already have an account? <a href="{{ url_for('login') }}" style="color:#e94560; text-decoration:none; font-weight:600;">Sign in</a>
+    </p>
   </div>
 </div>
 {% endblock %}
