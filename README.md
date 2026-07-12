@@ -1,4 +1,4 @@
-# 🍽️ TasteMap — Restaurant Discovery Platform
+<img width="3392" height="1772" alt="2026-07-12_19-24" src="https://github.com/user-attachments/assets/b9a175e9-5a23-494f-989b-f3892dbe8b1f" /># 🍽️ TasteMap — Restaurant Discovery Platform
 
 A full-stack web application for discovering, browsing, and saving restaurants. Built with a microservice architecture, async Python backend, and a premium responsive frontend.
 
@@ -13,6 +13,26 @@ A full-stack web application for discovering, browsing, and saving restaurants. 
 ---
 
 ## 📸 Screenshots
+
+<img width="3402" height="1924" alt="2026-07-12_19-14" src="https://github.com/user-attachments/assets/f4678323-cd7d-41af-b13d-45ae1371aae4" />
+
+<img width="3412" height="1904" alt="2026-07-12_19-14_1" src="https://github.com/user-attachments/assets/231d7737-106e-4a73-8864-f9ba95aa3910" />
+
+
+<img width="2620" height="1644" alt="2026-07-12_19-22" src="https://github.com/user-attachments/assets/b63fb8c5-7598-4124-8bc6-af956e0e96cb" />
+
+<img width="2974" height="1202" alt="2026-07-12_19-22_1" src="https://github.com/user-attachments/assets/733e008c-d8ba-498a-befa-4e211d4c3d3a" />
+
+<img width="2894" height="1774" alt="2026-07-12_19-23" src="https://github.com/user-attachments/assets/48e76568-2b1d-41bd-b37b-83e6f38a31da" />
+
+
+<img width="2844" height="1050" alt="2026-07-12_19-23_1" src="https://github.com/user-attachments/assets/d97d8b45-9613-4380-95ab-ecdd657a88c4" />
+
+
+<img width="3390" height="1820" alt="2026-07-12_19-23_2" src="https://github.com/user-attachments/assets/553d036c-6a1a-469e-aebc-928a76cdafe0" />
+
+
+<img width="3392" height="1772" alt="2026-07-12_19-24" src="https://github.com/user-attachments/assets/b609318d-33b5-4ea8-bba5-7f6247824ebf" />
 
 
 ---
