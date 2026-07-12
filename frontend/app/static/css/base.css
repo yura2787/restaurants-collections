@@ -441,6 +441,45 @@ body {
   padding: 1.2rem 0;
 }
 
+.review-author {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.02em;
+}
+
+.review-text {
+  margin: 0;
+}
+
+.comment-form {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 90px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: var(--coral);
+}
+
 .btn-back {
   display: inline-flex;
   align-items: center;

@@ -146,19 +146,25 @@ async def get_restaurant(pk: int):
         return {}
 
 
-async def send_comment(access_token: str, restaurant_id: int, text: str, author_name: str):
+async def send_comment(access_token: str, restaurant_id: int, text: str, author_name: str = ""):
     try:
         async with httpx.AsyncClient(timeout=TIMEOUT) as client:
-            response = await client.patch(
-                url=f'{settings.BACKEND_API}/users/users/add_comment',
-                json={
-                    "restaurant_id": restaurant_id,
-                    "text": text,
-                    "author_name": author_name
-                },
+            response = await client.post(
+                url=f'{settings.BACKEND_API}/restaurants/{restaurant_id}/comments',
+                json={"text": text},
                 headers={"Authorization": f"Bearer {access_token}"}
             )
             return response.json()
     except Exception as e:
         logger.error(f"send_comment error: {e}")
         return {}
+
+
+async def get_comments(restaurant_id: int) -> list:
+    try:
+        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            response = await client.get(url=f'{settings.BACKEND_API}/restaurants/{restaurant_id}/comments')
+            return response.json() if response.status_code == 200 else []
+    except Exception as e:
+        logger.error(f"get_comments error: {e}")
+        return []

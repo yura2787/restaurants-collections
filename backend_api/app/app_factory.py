@@ -14,6 +14,7 @@ from settings import settings
 from applications.users.models import User  # noqa: F401
 from applications.users.favorite_model import Favorite  # noqa: F401
 from applications.Restaurants.models_restaurants import Restaurants  # noqa: F401
+from applications.Restaurants.comment_model import RestaurantComment  # noqa: F401
 
 logging.basicConfig(
     level=logging.DEBUG if settings.DEBUG else logging.INFO,

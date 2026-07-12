@@ -72,10 +72,24 @@
         <h3>Reviews</h3>
         {% if comments %}
             {% for item in comments %}
-                <div class="review-item">{{ item }}</div>
+            <div class="review-item">
+                <span class="review-author">👤 {{ item.author_name }}</span>
+                <p class="review-text">{{ item.text }}</p>
+            </div>
             {% endfor %}
         {% else %}
             <p class="no-reviews">No reviews yet</p>
+        {% endif %}
+
+        {% if user %}
+        <form method="post" action="{{ url_for('add_comment', restaurant_id=restaurant.id) }}" class="comment-form">
+            <textarea name="comment_text" class="comment-input" placeholder="Write a review..." required minlength="3" maxlength="500"></textarea>
+            <button type="submit" class="btn-submit" style="max-width:180px;">Post review</button>
+        </form>
+        {% else %}
+        <p class="no-reviews" style="margin-top:1rem;">
+            <a href="{{ url_for('login') }}" style="color:#e94560;">Sign in</a> to leave a review
+        </p>
         {% endif %}
     </div>
 

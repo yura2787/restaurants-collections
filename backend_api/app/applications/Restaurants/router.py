@@ -1,12 +1,29 @@
 from fastapi import APIRouter, Depends, status, Body, UploadFile, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from services.s3.s3 import s3_storage
 from database.session_dependencies import get_async_session
 import uuid
 from applications.Restaurants.crud import create_restaurant_in_db, get_restaurants_data, get_restaurant_by_pk, get_cuisines
 from applications.Restaurants.schemas import RestaurantSchema, SearchParamsSchema
-from applications.auth.security import admin_required
+from applications.Restaurants.comment_model import RestaurantComment
+from applications.auth.security import admin_required, get_current_user
+from applications.users.models import User
 from typing import Annotated
+from pydantic import BaseModel
+
+
+class CommentIn(BaseModel):
+    text: str
+
+
+class CommentOut(BaseModel):
+    id: int
+    author_name: str
+    text: str
+
+    class Config:
+        from_attributes = True
 
 router_restaurants = APIRouter()
 
@@ -88,3 +105,22 @@ async def get_restaurants(params: Annotated[SearchParamsSchema, Depends()],
                           session: AsyncSession = Depends(get_async_session)):
     result = await get_restaurants_data(params, session)
     return result
+
+
+@router_restaurants.get('/{pk}/comments', response_model=list[CommentOut])
+async def get_comments(pk: int, session: AsyncSession = Depends(get_async_session)):
+    result = await session.execute(
+        select(RestaurantComment)
+        .where(RestaurantComment.restaurant_id == pk)
+        .order_by(RestaurantComment.created_at.desc())
+    )
+    return result.scalars().all()
+
+
+@router_restaurants.post('/{pk}/comments', response_model=CommentOut, status_code=status.HTTP_201_CREATED)
+async def add_comment(pk: int, body: CommentIn, user: User = Depends(get_current_user), session: AsyncSession = Depends(get_async_session)):
+    comment = RestaurantComment(restaurant_id=pk, author_name=user.name, text=body.text)
+    session.add(comment)
+    await session.commit()
+    await session.refresh(comment)
+    return comment

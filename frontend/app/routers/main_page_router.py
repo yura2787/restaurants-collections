@@ -3,10 +3,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import  RedirectResponse, JSONResponse
 
 from backend_api.api import (get_current_user_with_token, login_user, get_restaurants, get_restaurant,
-                             get_user_info, get_cuisines, get_favorites, add_favorite, remove_favorite)
-
-
-from backend_api.api import register_user, send_comment
+                             get_user_info, get_cuisines, get_favorites, add_favorite, remove_favorite,
+                             register_user, send_comment, get_comments)
 
 router = APIRouter()
 
@@ -113,26 +111,11 @@ async def add_comment(
     if not user.get("access_token"):
         return RedirectResponse(request.url_for("login"), status_code=status.HTTP_303_SEE_OTHER)
 
-
-    await send_comment(user["access_token"], restaurant_id, comment_text, user["name"])
-
-
-    updated_user = await get_user_info(user["access_token"])
-
-    restaurants_response = await get_restaurants("")
-    restaurants = restaurants_response["items"]
-
-    for restaurant in restaurants:
-        restaurant['comments'] = [
-            {
-                "text": comment["text"],
-                "author": comment.get("author_name", "Anon")
-            }
-            for comment in updated_user.get("comments", [])
-            if int(comment["restaurant_id"]) == int(restaurant["id"])
-        ]
-
-    return RedirectResponse(request.url_for("index"), status_code=status.HTTP_303_SEE_OTHER)
+    await send_comment(user["access_token"], restaurant_id, comment_text)
+    return RedirectResponse(
+        request.url_for("restaurant_detail", restaurant_id=restaurant_id),
+        status_code=status.HTTP_303_SEE_OTHER
+    )
 
 
 
@@ -141,13 +124,7 @@ async def add_comment(
 @router.get('/restaurant/{restaurant_id}')
 async def restaurant_detail(request: Request, restaurant_id: int, user: dict = Depends(get_current_user_with_token)):
     restaurant = await get_restaurant(restaurant_id)
-    comments = []
-    if user.get("comments"):
-        comments = [
-            comment["text"]
-            for comment in user["comments"]
-            if comment.get("restaurant_id") == restaurant_id
-        ]
+    comments = await get_comments(restaurant_id)
 
     is_favorite = False
     if user.get('access_token'):
